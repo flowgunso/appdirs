@@ -214,12 +214,12 @@ func siteLogDir(name, author, version string, opinion bool) (path string) {
 	}
 	if name != "" {
 		path = filepath.Join(path, author, name)
-		if opinion {
-			path = filepath.Join(path, "Logs")
-		}
 	}
 	if name != "" && version != "" {
 		path = filepath.Join(path, version)
+	}
+	if name != "" && opinion {
+		path = filepath.Join(path, "Logs")
 	}
 	return path
 }
