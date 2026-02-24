@@ -124,3 +124,93 @@ Examples of return values:
 func UserLogDir(name, author, version string, opinion bool) string {
 	return userLogDir(name, author, version, opinion)
 }
+
+/*
+SiteCacheDir returns the full path to the user-shared cache directory.
+
+The opinion argument will append "Cache" to the base directory if set to true on
+platforms that follow that convention (e.g. Windows).
+*/
+func SiteCacheDir(name, author, version string, opinion bool) string {
+	return siteCacheDir(name, author, version, opinion)
+}
+
+/*
+UserStateDir returns the full path to the user-specific state directory.
+
+Examples of return values:
+
+	Mac OS X: same as UserDataDir
+	Unix: ~/.local/state/<AppName> (or under $XDG_STATE_HOME if defined)
+	Windows: same as UserDataDir
+*/
+func UserStateDir(name, author, version string, roaming bool) string {
+	return userStateDir(name, author, version, roaming)
+}
+
+/*
+SiteStateDir returns the full path to the user-shared state directory.
+
+Examples of return values:
+
+	Mac OS X: same as SiteDataDir
+	Unix: /var/lib/<AppName>
+	Windows: same as SiteDataDir
+*/
+func SiteStateDir(name, author, version string) string {
+	return siteStateDir(name, author, version)
+}
+
+/*
+SiteLogDir returns the full path to the user-shared log directory.
+
+The opinion argument will append either 'Logs' (Windows and macOS) or 'log' (Unix)
+to the base directory when set to true on platforms that follow that convention.
+*/
+func SiteLogDir(name, author, version string, opinion bool) string {
+	return siteLogDir(name, author, version, opinion)
+}
+
+/*
+UserRuntimeDir returns the full path to the user-specific runtime directory.
+*/
+func UserRuntimeDir(name, author, version string) string {
+	return userRuntimeDir(name, author, version)
+}
+
+/*
+SiteRuntimeDir returns the full path to the shared runtime directory.
+*/
+func SiteRuntimeDir(name, author, version string) string {
+	return siteRuntimeDir(name, author, version)
+}
+
+// UserDocumentsDir returns the path to the user's documents directory.
+func UserDocumentsDir() string { return userDocumentsDir() }
+
+// UserDownloadsDir returns the path to the user's downloads directory.
+func UserDownloadsDir() string { return userDownloadsDir() }
+
+// UserPicturesDir returns the path to the user's pictures directory.
+func UserPicturesDir() string { return userPicturesDir() }
+
+// UserVideosDir returns the path to the user's videos directory.
+func UserVideosDir() string { return userVideosDir() }
+
+// UserMusicDir returns the path to the user's music directory.
+func UserMusicDir() string { return userMusicDir() }
+
+// UserDesktopDir returns the path to the user's desktop directory.
+func UserDesktopDir() string { return userDesktopDir() }
+
+// UserBinDir returns the path to the user's bin directory.
+func UserBinDir() string { return userBinDir() }
+
+// SiteBinDir returns the path to the shared bin directory.
+func SiteBinDir() string { return siteBinDir() }
+
+// UserApplicationsDir returns the path to the user's applications directory.
+func UserApplicationsDir() string { return userApplicationsDir() }
+
+// SiteApplicationsDir returns the path to the shared applications directory.
+func SiteApplicationsDir() string { return siteApplicationsDir() }

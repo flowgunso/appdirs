@@ -6,6 +6,9 @@ package appdirs
 import (
 	"os"
 	"path/filepath"
+	"runtime"
+	"strconv"
+	"strings"
 )
 
 func naiveTildeExpand(path string) string {
@@ -109,3 +112,116 @@ func userLogDir(name, author, version string, opinion bool) (path string) {
 
 	return filepath.Join(path, "log")
 }
+
+func siteCacheDir(name, author, version string, opinion bool) (path string) {
+	path = "/var/cache"
+	if name != "" {
+		path = filepath.Join(path, name, version)
+	}
+	return path
+}
+
+func userStateDir(name, author, version string, roaming bool) (path string) {
+	if path = os.Getenv("XDG_STATE_HOME"); path == "" {
+		path = filepath.Join(homeDir(), ".local", "state")
+	}
+	if name != "" {
+		path = filepath.Join(path, name, version)
+	}
+	return path
+}
+
+func siteStateDir(name, author, version string) (path string) {
+	path = "/var/lib"
+	if name != "" {
+		path = filepath.Join(path, name, version)
+	}
+	return path
+}
+
+func siteLogDir(name, author, version string, opinion bool) (path string) {
+	path = "/var/log"
+	if name != "" {
+		path = filepath.Join(path, name, version)
+	}
+	return path
+}
+
+func userRuntimeDir(name, author, version string) (path string) {
+	if path = os.Getenv("XDG_RUNTIME_DIR"); path == "" {
+		uid := os.Getuid()
+		uidStr := strconv.Itoa(uid)
+		switch {
+		case strings.HasPrefix(runtimeOS(), "openbsd"):
+			path = filepath.Join("/tmp/run/user", uidStr)
+		case strings.HasPrefix(runtimeOS(), "freebsd"), strings.HasPrefix(runtimeOS(), "netbsd"):
+			path = filepath.Join("/var/run/user", uidStr)
+		default:
+			path = filepath.Join("/run/user", uidStr)
+		}
+	}
+	if name != "" {
+		path = filepath.Join(path, name, version)
+	}
+	return path
+}
+
+func siteRuntimeDir(name, author, version string) (path string) {
+	switch {
+	case strings.HasPrefix(runtimeOS(), "freebsd"), strings.HasPrefix(runtimeOS(), "openbsd"), strings.HasPrefix(runtimeOS(), "netbsd"):
+		path = "/var/run"
+	default:
+		path = "/run"
+	}
+	if name != "" {
+		path = filepath.Join(path, name, version)
+	}
+	return path
+}
+
+func userDocumentsDir() string { return userMediaDir("XDG_DOCUMENTS_DIR", "~/Documents") }
+
+func userDownloadsDir() string { return userMediaDir("XDG_DOWNLOAD_DIR", "~/Downloads") }
+
+func userPicturesDir() string { return userMediaDir("XDG_PICTURES_DIR", "~/Pictures") }
+
+func userVideosDir() string { return userMediaDir("XDG_VIDEOS_DIR", "~/Videos") }
+
+func userMusicDir() string { return userMediaDir("XDG_MUSIC_DIR", "~/Music") }
+
+func userDesktopDir() string { return userMediaDir("XDG_DESKTOP_DIR", "~/Desktop") }
+
+func userBinDir() string { return filepath.Join(homeDir(), ".local", "bin") }
+
+func siteBinDir() string { return "/usr/local/bin" }
+
+func userApplicationsDir() string {
+	return filepath.Join(homeDir(), ".local", "share", "applications")
+}
+
+func siteApplicationsDir() string {
+	return filepath.Join("/usr/local/share", "applications")
+}
+
+func userMediaDir(envKey, fallback string) string {
+	if val := strings.TrimSpace(os.Getenv(envKey)); val != "" {
+		return naiveTildeExpand(val)
+	}
+	configPath := filepath.Join(homeDir(), ".config", "user-dirs.dirs")
+	if data, err := os.ReadFile(configPath); err == nil {
+		lines := strings.Split(string(data), "\n")
+		for _, line := range lines {
+			line = strings.TrimSpace(line)
+			if strings.HasPrefix(line, envKey+"=") {
+				val := strings.TrimPrefix(line, envKey+"=")
+				val = strings.Trim(val, "\"")
+				val = strings.ReplaceAll(val, "$HOME", homeDir())
+				return naiveTildeExpand(val)
+			}
+		}
+	}
+	return naiveTildeExpand(fallback)
+}
+
+// runtimeOS is split out for tests and to avoid importing runtime multiple times.
+func runtimeOS() string { return runtime.GOOS }

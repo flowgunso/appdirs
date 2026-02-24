@@ -66,6 +66,66 @@ func (app *App) UserLog() string {
 	return UserLogDir(app.Name, app.Author, app.Version, app.Opinion)
 }
 
+// SiteCache returns the full path to the shared cache directory
+func (app *App) SiteCache() string {
+	return SiteCacheDir(app.Name, app.Author, app.Version, app.Opinion)
+}
+
+// UserState returns the full path to the user-specific state directory
+func (app *App) UserState() string {
+	return UserStateDir(app.Name, app.Author, app.Version, app.Roaming)
+}
+
+// SiteState returns the full path to the shared state directory
+func (app *App) SiteState() string {
+	return SiteStateDir(app.Name, app.Author, app.Version)
+}
+
+// SiteLog returns the full path to the shared log directory
+func (app *App) SiteLog() string {
+	return SiteLogDir(app.Name, app.Author, app.Version, app.Opinion)
+}
+
+// UserRuntime returns the full path to the user-specific runtime directory
+func (app *App) UserRuntime() string {
+	return UserRuntimeDir(app.Name, app.Author, app.Version)
+}
+
+// SiteRuntime returns the full path to the shared runtime directory
+func (app *App) SiteRuntime() string {
+	return SiteRuntimeDir(app.Name, app.Author, app.Version)
+}
+
+// UserDocuments returns the user's documents directory
+func (app *App) UserDocuments() string { return UserDocumentsDir() }
+
+// UserDownloads returns the user's downloads directory
+func (app *App) UserDownloads() string { return UserDownloadsDir() }
+
+// UserPictures returns the user's pictures directory
+func (app *App) UserPictures() string { return UserPicturesDir() }
+
+// UserVideos returns the user's videos directory
+func (app *App) UserVideos() string { return UserVideosDir() }
+
+// UserMusic returns the user's music directory
+func (app *App) UserMusic() string { return UserMusicDir() }
+
+// UserDesktop returns the user's desktop directory
+func (app *App) UserDesktop() string { return UserDesktopDir() }
+
+// UserBin returns the user's bin directory
+func (app *App) UserBin() string { return UserBinDir() }
+
+// SiteBin returns the shared bin directory
+func (app *App) SiteBin() string { return SiteBinDir() }
+
+// UserApplications returns the user's applications directory
+func (app *App) UserApplications() string { return UserApplicationsDir() }
+
+// SiteApplications returns the shared applications directory
+func (app *App) SiteApplications() string { return SiteApplicationsDir() }
+
 // homeDir for the current user
 func homeDir() string {
 	user, _ := user.Current()
